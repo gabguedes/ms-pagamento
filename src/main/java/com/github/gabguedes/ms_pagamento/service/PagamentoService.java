@@ -6,6 +6,8 @@ import com.github.gabguedes.ms_pagamento.model.Status;
 import com.github.gabguedes.ms_pagamento.repository.PagamentoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +21,9 @@ public class PagamentoService {
     private PagamentoRepository repository;
 
     @Transactional(readOnly = true)
-    public List<PagamentoDTO> findAll(){
-        List<Pagamento> list = repository.findAll();
-        return list.stream().map(PagamentoDTO::new).collect(Collectors.toList());
+    public Page<PagamentoDTO> findAll(Pageable pageable){
+        Page<Pagamento> page = repository.findAll(pageable);
+        return page.map(PagamentoDTO::new);
     }
 
     @Transactional(readOnly = true)

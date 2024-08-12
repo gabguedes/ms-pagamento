@@ -5,6 +5,9 @@ import com.github.gabguedes.ms_pagamento.model.Pagamento;
 import com.github.gabguedes.ms_pagamento.service.PagamentoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +24,8 @@ public class PagamentoController {
     private PagamentoService service;
 
     @GetMapping
-    public ResponseEntity<List<PagamentoDTO>> findAll(){
-        List<PagamentoDTO> dto = service.findAll();
+    public ResponseEntity<Page<PagamentoDTO>> findAll(@PageableDefault(size = 10)Pageable pageable){
+        Page<PagamentoDTO> dto = service.findAll(pageable);
         return ResponseEntity.ok(dto);
     }
 
