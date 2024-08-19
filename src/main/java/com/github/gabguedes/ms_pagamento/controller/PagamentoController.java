@@ -4,6 +4,7 @@ import com.github.gabguedes.ms_pagamento.dto.PagamentoDTO;
 import com.github.gabguedes.ms_pagamento.model.Pagamento;
 import com.github.gabguedes.ms_pagamento.service.PagamentoService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,15 @@ public class PagamentoController {
                 .buildAndExpand(dto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(dto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PagamentoDTO> update(@PathVariable @NotNull Long id,
+                                               @RequestBody @Valid PagamentoDTO dto){
+
+        dto = service.update(id, dto);
+        return  ResponseEntity.ok(dto);
+
     }
 
     @DeleteMapping("/{id}")
