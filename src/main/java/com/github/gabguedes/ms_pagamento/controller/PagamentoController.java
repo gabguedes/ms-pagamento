@@ -25,10 +25,16 @@ public class PagamentoController {
     private PagamentoService service;
 
     @GetMapping
-    public ResponseEntity<Page<PagamentoDTO>> findAll(@PageableDefault(size = 10)Pageable pageable){
-        Page<PagamentoDTO> dto = service.findAll(pageable);
+    public ResponseEntity<List<PagamentoDTO>> findAll(){
+        List<PagamentoDTO> dto = service.findAll();
         return ResponseEntity.ok(dto);
     }
+
+//    @GetMapping
+//    public ResponseEntity<Page<PagamentoDTO>> findAll(@PageableDefault(size = 10)Pageable pageable){
+//        Page<PagamentoDTO> dto = service.findAll(pageable);
+//        return ResponseEntity.ok(dto);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<PagamentoDTO> findById(@PathVariable Long id){

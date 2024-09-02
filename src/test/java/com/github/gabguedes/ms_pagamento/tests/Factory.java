@@ -1,5 +1,6 @@
 package com.github.gabguedes.ms_pagamento.tests;
 
+import com.github.gabguedes.ms_pagamento.dto.PagamentoDTO;
 import com.github.gabguedes.ms_pagamento.model.Pagamento;
 import com.github.gabguedes.ms_pagamento.model.Status;
 
@@ -14,6 +15,11 @@ public class Factory {
                 Status.CRIADO, 1L, 2L);
 
         return pagamento;
+    }
+
+    public static PagamentoDTO createPagamentoDTO(){
+        Pagamento pagamento = createPagamento();
+        return new PagamentoDTO(pagamento);
     }
 
 }
