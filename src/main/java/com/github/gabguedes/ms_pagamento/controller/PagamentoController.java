@@ -48,7 +48,9 @@ public class PagamentoController {
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(dto.getId()).toUri();
+                .buildAndExpand(dto)
+                .toUri();
+//                .buildAndExpand(dto.getId())
 
         return ResponseEntity.created(uri).body(dto);
     }
