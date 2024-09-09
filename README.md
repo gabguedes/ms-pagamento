@@ -45,5 +45,5 @@ PUT http://localhost:8080/pagamentos/{id}
 
 Delete Pagamento
 ```http
-DELETE localhost:8080/pagamentos/{id}
+DELETE http://localhost:8080/pagamentos/{id}
 ```
