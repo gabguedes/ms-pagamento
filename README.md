@@ -20,7 +20,7 @@ A aplicação é uma API REST de cadastro de pagamentos.
   - application-test.properties: perfil de teste com o banco de dados H2.
 
 ### API Endpoints
-#### User
+#### Pagamento
 
 Listar todos os Pagamentos.
 ```http
@@ -37,10 +37,36 @@ Create Pagamento
 ``` http
 POST http://localhost:8080/pagamentos
 ```
+Body
+```json
+{
+  "valor": 3000,
+  "nome": "Roberto Silva",
+  "numeroDoCartao": 4546547652180066,
+  "validade": "09/25",
+  "codigoSeguranca": "455",
+  "status": "CRIADO",
+  "pedidoId": "1",
+  "formaDePagamentoId": "3"
+}
+```
 
 Update Pagamento
 ```http
 PUT http://localhost:8080/pagamentos/{id}
+```
+Body
+```json
+{
+  "valor": 3550,
+  "nome": "Roberto",
+  "numeroDoCartao": 4546547652180066,
+  "validade": "09/25",
+  "codigoSeguranca": "455",
+  "status": "CONFIRMADO",
+  "pedidoId": "1",
+  "formaDePagamentoId": "3"
+}
 ```
 
 Delete Pagamento
