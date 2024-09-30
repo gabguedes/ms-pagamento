@@ -1,6 +1,7 @@
 package com.github.gabguedes.ms_pagamento.service;
 
 import com.github.gabguedes.ms_pagamento.dto.PagamentoDTO;
+import com.github.gabguedes.ms_pagamento.http.PedidoClient;
 import com.github.gabguedes.ms_pagamento.model.Pagamento;
 import com.github.gabguedes.ms_pagamento.model.Status;
 import com.github.gabguedes.ms_pagamento.repository.PagamentoRepository;
@@ -9,13 +10,18 @@ import com.github.gabguedes.ms_pagamento.service.exception.ResourceNotFoundExcep
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class PagamentoService {
+
+    @Autowired
+    private PedidoClient pedidoClient;
 
     @Autowired
     private PagamentoRepository repository;
@@ -71,7 +77,7 @@ public class PagamentoService {
         }
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void delete (Long id){
         if(!repository.existsById(id)){
             throw new ResourceNotFoundException("Recurso não encontrado! Id: " + id);
@@ -82,6 +88,20 @@ public class PagamentoService {
 //            throw new ResourceNotFoundException("Recurso não encontrado! Id: " + id);
             throw new DatabaseException("Falha de integridade  referencial");
         }
+    }
+
+    @Transactional
+    public void confirmarPagamentoDePedido(Long id){
+
+        Optional<Pagamento> pagamento = repository.findById(id);
+
+        if(pagamento.isEmpty()){
+            throw new ResourceNotFoundException("Recurso não encontrado! Id: " + id);
+        }
+
+        pagamento.get().setStatus(Status.CONFIRMADO);
+        repository.save(pagamento.get());
+        pedidoClient.atualizarPagamentoDoPedido(pagamento.get().getPedidoId());
     }
 
 }

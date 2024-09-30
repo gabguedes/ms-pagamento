@@ -70,4 +70,8 @@ public class PagamentoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/confirmar")
+    public void confirmarPagamentoDePedido(@PathVariable @NotNull Long id){
+        service.confirmarPagamentoDePedido(id);
+    }
 }
