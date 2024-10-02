@@ -3,6 +3,7 @@ package com.github.gabguedes.ms_pagamento.controller;
 import com.github.gabguedes.ms_pagamento.dto.PagamentoDTO;
 import com.github.gabguedes.ms_pagamento.model.Pagamento;
 import com.github.gabguedes.ms_pagamento.service.PagamentoService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,6 @@ public class PagamentoController {
         return ResponseEntity.ok(dto);
     }
 
-//    @GetMapping
-//    public ResponseEntity<Page<PagamentoDTO>> findAll(@PageableDefault(size = 10)Pageable pageable){
-//        Page<PagamentoDTO> dto = service.findAll(pageable);
-//        return ResponseEntity.ok(dto);
-//    }
-
     @GetMapping("/{id}")
     public ResponseEntity<PagamentoDTO> findById(@PathVariable Long id){
         PagamentoDTO dto =  service.findById(id);
@@ -50,7 +45,6 @@ public class PagamentoController {
                 .path("/{id}")
                 .buildAndExpand(dto)
                 .toUri();
-//                .buildAndExpand(dto.getId())
 
         return ResponseEntity.created(uri).body(dto);
     }
@@ -71,7 +65,15 @@ public class PagamentoController {
     }
 
     @PatchMapping("/{id}/confirmar")
+    @CircuitBreaker(name = "atualizarPedido", fallbackMethod = "pagamentoAutorizadoComIntegracaoPendente")
     public void confirmarPagamentoDePedido(@PathVariable @NotNull Long id){
         service.confirmarPagamentoDePedido(id);
     }
+
+    public void pagamentoAutorizadoComIntegracaoPendente(Long id, Exception e){
+
+        service.alterarStatusDoPagamento(id);
+
+    }
+
 }

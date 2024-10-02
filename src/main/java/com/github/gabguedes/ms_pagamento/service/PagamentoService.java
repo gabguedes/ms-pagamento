@@ -104,4 +104,16 @@ public class PagamentoService {
         pedidoClient.atualizarPagamentoDoPedido(pagamento.get().getPedidoId());
     }
 
+    public void alterarStatusDoPagamento(Long id){
+
+        Optional<Pagamento> pagamento = repository.findById(id);
+
+        if(pagamento.isEmpty()){
+            throw new ResourceNotFoundException("Recurso não encontrado! Id: " + id);
+        }
+
+        pagamento.get().setStatus(Status.CONFIRMADO_SEM_INTEGRACAO);
+        repository.save(pagamento.get());
+    }
+
 }
