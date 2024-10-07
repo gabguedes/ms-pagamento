@@ -1,7 +1,6 @@
 package com.github.gabguedes.ms_pagamento.service;
 
 import com.github.gabguedes.ms_pagamento.dto.PagamentoDTO;
-import com.github.gabguedes.ms_pagamento.http.PedidoClient;
 import com.github.gabguedes.ms_pagamento.model.Pagamento;
 import com.github.gabguedes.ms_pagamento.model.Status;
 import com.github.gabguedes.ms_pagamento.repository.PagamentoRepository;
@@ -19,9 +18,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class PagamentoService {
-
-    @Autowired
-    private PedidoClient pedidoClient;
 
     @Autowired
     private PagamentoRepository repository;
@@ -88,32 +84,6 @@ public class PagamentoService {
 //            throw new ResourceNotFoundException("Recurso não encontrado! Id: " + id);
             throw new DatabaseException("Falha de integridade  referencial");
         }
-    }
-
-    @Transactional
-    public void confirmarPagamentoDePedido(Long id){
-
-        Optional<Pagamento> pagamento = repository.findById(id);
-
-        if(pagamento.isEmpty()){
-            throw new ResourceNotFoundException("Recurso não encontrado! Id: " + id);
-        }
-
-        pagamento.get().setStatus(Status.CONFIRMADO);
-        repository.save(pagamento.get());
-        pedidoClient.atualizarPagamentoDoPedido(pagamento.get().getPedidoId());
-    }
-
-    public void alterarStatusDoPagamento(Long id){
-
-        Optional<Pagamento> pagamento = repository.findById(id);
-
-        if(pagamento.isEmpty()){
-            throw new ResourceNotFoundException("Recurso não encontrado! Id: " + id);
-        }
-
-        pagamento.get().setStatus(Status.CONFIRMADO_SEM_INTEGRACAO);
-        repository.save(pagamento.get());
     }
 
 }
